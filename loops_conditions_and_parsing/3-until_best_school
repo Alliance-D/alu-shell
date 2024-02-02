@@ -3,8 +3,8 @@
 
 a=1
 
-until [ $a -gt 20]
+until [ $a -gt 20 ]
 do
 	echo "Best School"
-	((a++)
+	((a++))
 done

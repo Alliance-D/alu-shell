@@ -1,25 +1,50 @@
 #!/usr/bin/env bash
 #11-manage_my_process
-if [ "$1" == "start" ]
-then
-  ./manage_my_process 
-  echo $$ > /var/run/my_process.pid
-  echo "manage_my_process started"
+PID_FILE="/var/run/my_process.pid"
+PROCESS_NAME="manage_my_process"
 
-elif [ "$1" == "stop" ]
-then
-  kill "$(pgrep -f /manage_my_process)" 
-  rm /var/run/my_process.pid
-  echo "manage_my_process stopped"
+start_process() {
+  if [ -f "$PID_FILE" ]; then
+    echo "$PROCESS_NAME is already started."
+  else
+    echo $$ > "$PID_FILE"
+    echo "$PROCESS_NAME started"
+    ./manage_my_process
+  fi
+}
 
-elif [ "$1" == "restart" ]
-then
-  kill "$(pgrep -f /manage_my_process)"
-  rm /var/run/my_process.pid
-  ./manage_my_process 
-  echo $$ > /var/run/my_process.pid
-  echo "manage_my_process restarted"
+stop_process() {
+  if [ -f "$PID_FILE" ]; then
+    kill "$(cat "$PID_FILE")"
+    rm "$PID_FILE"
+    echo "$PROCESS_NAME stopped"
+  else
+    echo "$PROCESS_NAME is not running."
+  fi
+}
 
-else
-  echo "Usage: manage_my_process {start|stop|restart}"
-fi
+restart_process() {
+  if [ -f "$PID_FILE" ]; then
+    kill "$(cat "$PID_FILE")"
+    rm "$PID_FILE"
+  else
+    start_process
+  fi
+  start_process
+  echo "$PROCESS_NAME restarted"
+}
+
+case $1 in
+  start)
+    start_process
+    ;;
+  stop)
+    stop_process
+    ;;
+  restart)
+    restart_process
+    ;;
+  *)
+    echo "Usage: $PROCESS_NAME {start|stop|restart}"
+    ;;
+esac

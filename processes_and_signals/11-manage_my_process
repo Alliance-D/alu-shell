@@ -28,10 +28,13 @@ restart_process() {
     kill "$(cat "$PID_FILE")"
     rm "$PID_FILE"
   else
-    start_process
+    echo $$ > "$PID_FILE"
+    echo "$PROCESS_NAME restarted"
+    ./manage_my_process
   fi
-  start_process
-  echo "$PROCESS_NAME restarted"
+  echo $$ > "$PID_FILE"
+    echo "$PROCESS_NAME restarted"
+    ./manage_my_process
 }
 
 case $1 in

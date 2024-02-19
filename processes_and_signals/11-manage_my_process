@@ -8,7 +8,6 @@ start_process() {
     echo "$PROCESS_NAME is already started."
   else
     echo $$ > "$PID_FILE"
-    echo "$PROCESS_NAME started"
     ./manage_my_process
   fi
 }
@@ -16,7 +15,6 @@ start_process() {
 stop_process() {
   if [ -f "$PID_FILE" ]; then
     kill "$(cat "$PID_FILE")" && rm "$PID_FILE"
-    echo "$PROCESS_NAME stopped"
   else
     echo "$PROCESS_NAME is not running."
   fi
@@ -25,18 +23,20 @@ stop_process() {
 restart_process() {
   stop_process
   start_process
-  echo "$PROCESS_NAME restarted"
 }
 
 case $1 in
   start)
     start_process
+    echo "$PROCESS_NAME started"
     ;;
   stop)
     stop_process
+    echo "$PROCESS_NAME stopped"
     ;;
   restart)
     restart_process
+    echo "$PROCESS_NAME restarted"
     ;;
   *)
     echo "Usage: $PROCESS_NAME {start|stop|restart}"

@@ -12,4 +12,6 @@ elif [[ "$command" == "stop" ]]; then
 
 elif [[ "$command" == "restart" ]]; then
   "$0" stop >& /dev/nu
-
+else
+  echo "Usage: manage_my_process {start|stop|restart}"
+fi

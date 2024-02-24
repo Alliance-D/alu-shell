@@ -14,27 +14,13 @@ start_process() {
 }
 
 stop_process() {
-  if [ -f "$PID_FILE" ]; then
-    kill "$(cat "$PID_FILE")"
-    rm "$PID_FILE"
-    echo "$PROCESS_NAME stopped"
-  else
-    echo "$PROCESS_NAME is not running."
-  fi
+  sudo pkill -f './manage_my_process' &
+  rm /var/run/my_process.pid &
+  echo "manage_my_process stopped"
 }
 
 restart_process() {
-  if [ -f "$PID_FILE" ]; then
-    kill "$(cat "$PID_FILE")"
-    rm "$PID_FILE"
-  else
-    echo $$ > "$PID_FILE"
-    echo "$PROCESS_NAME restarted"
-    ./manage_my_process
-  fi
-  echo $$ > "$PID_FILE"
-    echo "$PROCESS_NAME restarted"
-    ./manage_my_process
+    "$0" stop >& /dev/nu
 }
 
 case $1 in

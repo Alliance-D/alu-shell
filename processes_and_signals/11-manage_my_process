@@ -1,39 +1,15 @@
 #!/usr/bin/env bash
 #11-manage_my_process
-PID_FILE="/var/run/my_process.pid"
-PROCESS_NAME="manage_my_process"
+if [[ "$command" == "start" ]]; then
+  ./manage_my_process &
+  echo "$!" > /var/run/my_process.pid
+  echo "manage_my_process started"
 
-start_process() {
-  if [ -f "$PID_FILE" ]; then
-    echo "$PROCESS_NAME is already started."
-  else
-    echo $$ > "$PID_FILE"
-    echo "$PROCESS_NAME started"
-    ./manage_my_process
-  fi
-}
-
-stop_process() {
+elif [[ "$command" == "stop" ]]; then
   sudo pkill -f './manage_my_process' &
   rm /var/run/my_process.pid &
   echo "manage_my_process stopped"
-}
 
-restart_process() {
-    "$0" stop >& /dev/nu
-}
+elif [[ "$command" == "restart" ]]; then
+  "$0" stop >& /dev/nu
 
-case $1 in
-  start)
-    start_process
-    ;;
-  stop)
-    stop_process
-    ;;
-  restart)
-    restart_process
-    ;;
-  *)
-    echo "Usage: $PROCESS_NAME {start|stop|restart}"
-    ;;
-esac
